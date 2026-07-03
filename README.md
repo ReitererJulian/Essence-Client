@@ -7,6 +7,12 @@
 - Save Raw Data via datalink
 - Change settings via OPC UA / REST API
 
+## Update Version 1.0.1
+- Start multiple measurements
+- Create graphs for x, y, z axis
+- plotly or matplotlib
+- Data cleaning through mean
+
 ## Variables
 
 Sensor ID: `esf00000000fc2f4839`
