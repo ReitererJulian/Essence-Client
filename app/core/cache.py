@@ -1,3 +1,4 @@
+import glob
 import time
 import json
 import os
@@ -17,7 +18,26 @@ def save_raw(data, sensor_name: str) -> None:
 
 def wipe_cache(folder: str = "cache") -> None:
     entries = os.listdir(folder)
+
     for entry in entries:
+        if entry == ".gitkeep":
+            continue
+
         path = os.path.join(folder, entry)
-        shutil.rmtree(path)
+
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        else:
+            os.remove(path)
+
     print("Cache wiped successfully")
+
+def list_files(sensor_name: str) -> list[str]:
+    folder = f"cache/{sensor_name}"
+    files = glob.glob(f"{folder}/*.json")
+    files.sort(key=os.path.getmtime, reverse=True)
+    return files
+
+def get_latest_file(sensor_name: str) -> str:
+    files = list_files(sensor_name)
+    return files[0] if files else None

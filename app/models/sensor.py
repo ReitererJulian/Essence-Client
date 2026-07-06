@@ -7,7 +7,7 @@ class Sensor:
     opcua_port: str
     name: str
     rest_base_url: str
-    opcus_base_url: str
+    opcua_url: str
 
     def __init__(self, host: str, port: str, opcua_port:str, name: str):
         self.host = host
