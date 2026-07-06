@@ -12,11 +12,8 @@ def show_menu():
     print("4. Exit")
 
 def main():
-    sensor_fc = Sensor("ESF00000000fc2f4839", "8700", name="fc2f4839")
-    sensor_56 = Sensor("SES00000000567f49fa", "8700", name="567f49fa")
-
-    sensor_fc_file_link = f"{sensor_fc.rest_base_url}cache/50c6e2d8-7259-4da2-adce-74fc7edfc14b-raw.json"
-    sensor_56_file_link = ""
+    sensor_fc = Sensor("ESF00000000fc2f4839", "8700", "4840", name="fc2f4839")
+    sensor_56 = Sensor("SES00000000567f49fa", "8700", "4840", name="567f49fa")
 
     while True:
         show_menu()
@@ -35,7 +32,11 @@ def main():
             print("Starting single measurement...")
             sensor_fc.single_measurement()
             sensor_56.single_measurement()
-            time.sleep(1)
+            time.sleep(5)
+
+            sensor_fc_file_link = sensor_fc.get_link()
+            sensor_56_file_link = sensor_56.get_link()
+
             cache.save_raw(sensor_fc.get_raw(sensor_fc_file_link), sensor_fc.name)
             cache.save_raw(sensor_56.get_raw(sensor_56_file_link), sensor_56.name)
             print("-------------------")

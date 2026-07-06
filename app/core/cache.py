@@ -1,6 +1,7 @@
 import time
 import json
 import os
+import shutil
 
 def save_raw(data, sensor_name: str) -> None:
     current_time = time.strftime("%Y-%m-%d %H-%M-%S")
@@ -15,10 +16,8 @@ def save_raw(data, sensor_name: str) -> None:
         json.dump(data, file, indent=4)
 
 def wipe_cache(folder: str = "cache") -> None:
-    files = os.listdir(folder)
-    if not files:
-        print("No files to wipe")
-        return
-    for file in files:
-        os.remove(os.path.join(folder, file))
+    entries = os.listdir(folder)
+    for entry in entries:
+        path = os.path.join(folder, entry)
+        shutil.rmtree(path)
     print("Cache wiped successfully")
