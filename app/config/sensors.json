@@ -1,0 +1,14 @@
+[
+  {
+    "name": "fc2f4839",
+    "host": "ESF00000000fc2f4839",
+    "rest_port": "8700",
+    "opcua_port": "4840"
+  },
+  {
+    "name": "567f49fa",
+    "host": "SES00000000567f49fa",
+    "rest_port": "8700",
+    "opcua_port": "4840"
+  }
+]

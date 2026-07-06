@@ -1,4 +1,5 @@
 from core import cache
+from core.config import load_sensors
 from models.sensor import Sensor
 from core.plot import *
 import time
@@ -11,53 +12,8 @@ def show_menu():
     print("2. Single Measurement and save raw data")
     print("3. Wipe Cache")
     print("4. Show Plots")
-    print("5. Exit")
-
-def main():
-    sensor_fc = Sensor("ESF00000000fc2f4839", "8700", "4840", name="fc2f4839")
-    sensor_56 = Sensor("SES00000000567f49fa", "8700", "4840", name="567f49fa")
-
-    while True:
-        show_menu()
-        user_input = input("Choose an option: ")
-
-        if user_input == "1":
-            print("Pinging sensors...")
-            print("-------------------")
-            print("Sensor: " + sensor_fc.name)
-            sensor_fc.ping()
-            print("-------------------")
-            print("Sensor: " + sensor_56.name)
-            sensor_56.ping()
-            print("-------------------")
-        elif user_input == "2":
-            print("Starting single measurement...")
-            sensor_fc.single_measurement()
-            sensor_56.single_measurement()
-            time.sleep(5)
-
-            sensor_fc_file_link = sensor_fc.get_link()
-            sensor_56_file_link = sensor_56.get_link()
-
-            cache.save_raw(sensor_fc.get_raw(sensor_fc_file_link), sensor_fc.name)
-            cache.save_raw(sensor_56.get_raw(sensor_56_file_link), sensor_56.name)
-            print("-------------------")
-        elif user_input == "3":
-            print("Wiping cache...")
-            cache.wipe_cache()
-            print("-------------------")
-        elif user_input == "4":
-            print("-------------------")
-            file_fc = select_files(sensor_fc.name)
-            file_56 = select_files(sensor_56.name)
-
-            plot_compare_sensors({
-                sensor_fc.name: file_fc,
-                sensor_56.name: file_56,
-            })
-            print("-------------------")
-        elif user_input == "5":
-            break
+    print("5. Toggle writing JSON")
+    print("6. Exit")
 
 def select_files(sensor_name: str):
     files = cache.list_files(sensor_name)
@@ -80,8 +36,74 @@ def select_files(sensor_name: str):
             index = int(choice) - 1
             return files[index] if 0 <= index < len(files) else None
         except ValueError:
-            print("Invalid input. Please enter a number between 1 and the number of files.")
+            print("Invalid input. Please enter a number between 0 and the number of files.")
             return None
+
+def toggle_json_write(sensors: list[Sensor]):
+    print("Select sensor to toggle: ")
+    for i, s in enumerate(sensors, 1):
+        print(f"{i}. {s.name}")
+    choice = input("Enter choice: ")
+
+    try:
+        index = int(choice) - 1
+        sensor = sensors[index] if 0 <= index < len(sensors) else None
+    except ValueError:
+        sensor = None
+
+    if sensor is None:
+        print("Invalid input.")
+        return
+
+    current = sensor.read_opcua("Storage.Control.SaveMeasurementData")
+    new_value = not current
+    sensor.write_opcua("Storage.Control.SaveMeasurementData", not current)
+    print(f"[{sensor.name}] SaveMeasurementData: {current} -> {new_value}")
+
+def main():
+    sensors = load_sensors()
+
+    while True:
+        show_menu()
+        user_input = input("Choose an option: ")
+
+        if user_input == "1":
+            print("Pinging sensors...")
+            for sensor in sensors:
+                print("-------------------")
+                print("Sensor: " + sensor.name)
+                sensor.ping()
+            print("-------------------")
+        elif user_input == "2":
+            print("Starting single measurement...")
+            for sensor in sensors:
+                sensor.single_measurement()
+            time.sleep(5)
+
+            for sensor in sensors:
+                link = sensor.get_link()
+                cache.save_raw(sensor.get_raw(link), sensor.name)
+            print("-------------------")
+        elif user_input == "3":
+            print("Wiping cache...")
+            cache.wipe_cache()
+            print("-------------------")
+        elif user_input == "4":
+            print("-------------------")
+            selected_files = {}
+            for sensor in sensors:
+                f = select_files(sensor.name)
+                if f:
+                    selected_files[sensor.name] = f
+
+            plot_compare_sensors(selected_files)
+            print("-------------------")
+        elif user_input == "5":
+            print("-------------------")
+            toggle_json_write(sensors)
+            print("-------------------")
+        elif user_input == "6":
+            break
 
 if __name__ == "__main__":
     main()

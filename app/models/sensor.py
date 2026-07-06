@@ -9,11 +9,11 @@ class Sensor:
     rest_base_url: str
     opcua_url: str
 
-    def __init__(self, host: str, port: str, opcua_port:str, name: str):
+    def __init__(self, host: str, rest_port: str, opcua_port:str, name: str):
         self.host = host
-        self.rest_port = port
+        self.rest_port = rest_port
         self.name = name
-        self.rest_base_url = f"http://{host}:{port}/"
+        self.rest_base_url = f"http://{host}:{rest_port}/"
         self.opcua_url = f"opc.tcp://{host}:{opcua_port}"
 
 # REST
@@ -58,11 +58,11 @@ class Sensor:
             client.connect()
             node = client.get_node(f"ns=2;s={node_path}")
             node.set_value(value)
-            print(f"[{self.name}] {node_path} -> {value}")
+            print(f"Writing: [{self.name}] {node_path} -> {value}")
         finally:
             client.disconnect()
 
-    def read_opcua(self, node_path: str) -> None:
+    def read_opcua(self, node_path: str):
         client = Client(self.opcua_url)
         try:
             client.connect()
