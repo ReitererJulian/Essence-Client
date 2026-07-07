@@ -38,12 +38,6 @@ cd essence-client
 pip install -r requirements.txt
 ```
 
-Copy the example sensor configuration and add your own sensors:
-
-```bash
-cp config/sensors.example.json config/sensors.json
-```
-
 Edit `config/sensors.json` with your sensor details:
 
 ```json
@@ -51,7 +45,6 @@ Edit `config/sensors.json` with your sensor details:
   {
     "name": "sensor1",
     "host": "your-sensor-hostname",
-    "opcua_host": "your-sensor-ip",
     "rest_port": "8700",
     "opcua_port": "4840"
   }
@@ -69,13 +62,13 @@ python main.py
 You'll be presented with a menu:
 =========================
 ESSENCE CLIENT
-
-Ping sensor (status)
-Single Measurement and save raw data
-Wipe Cache
-Show Plots
-Toggle writing JSON
-Exit
+=========================
+1. Ping sensor (status)
+2. Single Measurement and save raw data
+3. Wipe Cache
+4. Show Plots
+5. Toggle writing JSON
+6. Exit
 
 
 - **Ping sensors** – checks connectivity to all configured sensors
