@@ -1,26 +1,98 @@
 # Essence Client
 
-- Establish connection to sensor via OPC UA / REST API
-- Trigger Measurement via OPC UA / REST API
-- Get/Save values from OPC UA / REST API
-- Check sensor status via status - information - currentaction
-- Save Raw Data via datalink
-- Change settings via OPC UA / REST API
+## Description
+**Essence Client** is a Python application for controlling and reading data from industrial acceleration sensors. It communicates with multiple sensors simultaneously via **REST** (for status, triggering measurements, and reading data) and **OPC UA** (for writing configuration values), stores measurement data locally, and visualizes it using **Matplotlib**.
 
-## Update
-- Start multiple measurements
-- Create graphs for x, y, z axis
-- plotly or matplotlib
-- Data cleaning through mean
+[![Python](https://img.shields.io/badge/Language-Python%203.11-blue.svg)](https://www.python.org/)
+[![OPC UA](https://img.shields.io/badge/Protocol-OPC%20UA-green.svg)](https://opcfoundation.org/about/opc-technologies/opc-ua/)
+[![Matplotlib](https://img.shields.io/badge/Visualization-Matplotlib-orange.svg)](https://matplotlib.org/)
 
-## Variables
+## Key Features
+* **Multi-Sensor Support:** Control and read from multiple sensors simultaneously, configured via a simple JSON file.
+* **Dual-Protocol Communication:**
+    * **REST API** for status checks, triggering measurements, and retrieving raw data.
+    * **OPC UA** for writing configuration and control values (e.g. measurement intervals, data saving settings).
+* **Local Caching:** Automatically stores raw measurement data as timestamped JSON files, organized per sensor.
+* **Data Visualization:** Compare acceleration data (X/Y/Z axes) across multiple sensors, with optional mean-centering to highlight deviations between sensors.
+* **Interactive CLI:** Simple menu-driven interface for pinging sensors, starting measurements, managing cache, and plotting results.
 
-Sensor ID: `esf00000000fc2f4839`
+## Tech Stack
+* **Language:** Python 3.11
+* **Communication:** `requests` (REST), `opcua` (OPC UA client)
+* **Visualization:** Matplotlib, NumPy
+* **Configuration:** JSON-based sensor configuration
 
-Port: `8700`
+---
 
-Raw Data link can be accsed via: `Acceleration.Data.RawData.DataLink`
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Credits](#credits)
 
-Link only works when file exists
+## Installation
 
-OPC UA host and port: `opc.tcp://{host}:4840`
+```bash
+git clone https://github.com/ReitererJulian/essence-client.git
+cd essence-client
+pip install -r requirements.txt
+```
+
+Copy the example sensor configuration and add your own sensors:
+
+```bash
+cp config/sensors.example.json config/sensors.json
+```
+
+Edit `config/sensors.json` with your sensor details:
+
+```json
+[
+  {
+    "name": "sensor1",
+    "host": "your-sensor-hostname",
+    "opcua_host": "your-sensor-ip",
+    "rest_port": "8700",
+    "opcua_port": "4840"
+  }
+]
+```
+
+## Usage
+
+Run the client:
+
+```bash
+python main.py
+```
+
+You'll be presented with a menu:
+=========================
+ESSENCE CLIENT
+
+Ping sensor (status)
+Single Measurement and save raw data
+Wipe Cache
+Show Plots
+Toggle writing JSON
+Exit
+
+
+- **Ping sensors** – checks connectivity to all configured sensors
+- **Single Measurement** – triggers a measurement on all sensors and saves the raw data locally
+- **Wipe Cache** – clears all locally stored measurement files
+- **Show Plots** – select and compare measurement files across sensors, with optional mean-centering
+- **Toggle writing JSON** – enables/disables raw data saving on a selected sensor
+
+## Project Structure
+app/
+├── cache/              # Locally stored measurement data (per sensor)
+├── config/             # Sensor configuration
+├── core/               # Cache management, plotting, config loading
+├── models/             # Sensor class (REST + OPC UA communication)
+└── main.py             # CLI entry point
+
+## Credits
+
+**Developer:**
+- [Reiterer Julian](https://github.com/ReitererJulian)

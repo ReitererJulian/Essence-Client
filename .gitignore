@@ -1,8 +1,8 @@
-cache/*
-
-!cache/.gitkeep
-
+app/cache/*
+!app/cache/.gitkeep
 .env
 .env.*
-
 .idea/
+__pycache__/
+*.pyc
+venv/
