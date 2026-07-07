@@ -1,0 +1,8 @@
+[
+  {
+    "name": "SENSOR_NAME",
+    "host": "SENSOR_IP",
+    "rest_port": "REST_PORT",
+    "opcua_port": "OPCUA_PORT"
+  }
+]

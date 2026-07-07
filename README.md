@@ -38,15 +38,21 @@ cd essence-client
 pip install -r requirements.txt
 ```
 
+Copy the example sensor configuration and add your own sensors:
+
+```bash
+cp config/sensors.example.json config/sensors.json
+```
+
 Edit `config/sensors.json` with your sensor details:
 
 ```json
 [
   {
-    "name": "sensor1",
-    "host": "your-sensor-hostname",
-    "rest_port": "8700",
-    "opcua_port": "4840"
+    "name": "SENSOR_NAME",
+    "host": "SENSOR_IP",
+    "rest_port": "REST_PORT",
+    "opcua_port": "OPCUA_PORT"
   }
 ]
 ```
