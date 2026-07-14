@@ -9,7 +9,7 @@ def show_menu():
     print("      ESSENCE CLIENT      ")
     print("=========================")
     print("1. Ping sensor (status)")
-    print("2. Single Measurement and save raw data")
+    print("2. Single Measurement")
     print("3. Wipe Cache")
     print("4. Show Plots")
     print("5. Toggle writing JSON")
@@ -39,10 +39,13 @@ def select_files(sensor_name: str):
             print("Invalid input. Please enter a number between 0 and the number of files.")
             return None
 
+def select_sensor(sensors: list[Sensor]):
+    print("Select a sensor:")
+    for i, sensor in enumerate(sensors, 1):
+        print(f"{i}. {sensor.name}")
+
 def toggle_json_write(sensors: list[Sensor]):
-    print("Select sensor to toggle: ")
-    for i, s in enumerate(sensors, 1):
-        print(f"{i}. {s.name}")
+    select_sensor(sensors)
     choice = input("Enter choice: ")
 
     try:
@@ -75,14 +78,23 @@ def main():
                 sensor.ping()
             print("-------------------")
         elif user_input == "2":
-            print("Starting single measurement...")
-            for sensor in sensors:
+            user_input = input("Trigger all sensors? (y/n): ").lower()
+            if user_input == "n":
+                select_sensor(sensors)
+                sensor_choice = input("Enter choice: ")
+                sensor = sensors[int(sensor_choice) - 1]
                 sensor.single_measurement()
-            time.sleep(5)
-
-            for sensor in sensors:
+                time.sleep(5)
                 link = sensor.get_link()
                 cache.save_raw(sensor.get_raw(link), sensor.name)
+            else:
+                for sensor in sensors:
+                    sensor.single_measurement()
+                time.sleep(5)
+
+                for sensor in sensors:
+                    link = sensor.get_link()
+                    cache.save_raw(sensor.get_raw(link), sensor.name)
             print("-------------------")
         elif user_input == "3":
             print("Wiping cache...")

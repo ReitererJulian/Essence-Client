@@ -83,6 +83,8 @@ ESSENCE CLIENT
 - **Show Plots** – select and compare measurement files across sensors, with optional mean-centering
 - **Toggle writing JSON** – enables/disables raw data saving on a selected sensor
 
+> To take single measurements, you must first enable writing JSON on the sensors you want to measure
+
 ## Project Structure
 app/
 ├── cache/              # Locally stored measurement data (per sensor)

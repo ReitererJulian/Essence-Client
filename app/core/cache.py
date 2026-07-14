@@ -38,6 +38,6 @@ def list_files(sensor_name: str) -> list[str]:
     files.sort(key=os.path.getmtime, reverse=True)
     return files
 
-def get_latest_file(sensor_name: str) -> str:
+def get_latest_file(sensor_name: str):
     files = list_files(sensor_name)
     return files[0] if files else None
