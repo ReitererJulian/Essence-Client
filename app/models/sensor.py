@@ -1,3 +1,5 @@
+import json
+
 import requests
 from opcua import Client
 
@@ -73,3 +75,28 @@ class Sensor:
 
     def get_link(self) -> str:
         return f"{self.read_opcua('Acceleration.Data.RawData.DataLink')}"
+
+    def get_device_type(self) -> str:
+        hw_type = self.read_opcua("Status.Hardware.Type")
+        if hw_type.startswith("SES"):
+            return "SES"
+        elif hw_type.startswith("SMS"):
+            return "SMS"
+        else:
+            raise ValueError(f"Unknown Hardware Type: {hw_type}")
+
+    def apply_default_settings(self, defaults_path: str = "config/defaults.json") -> None:
+        with open(defaults_path, "r") as f:
+            all_defaults = json.load(f)
+
+        device_type = self.get_device_type()
+        settings = all_defaults.get(device_type)
+
+        if settings is None:
+            print(f"[{self.name}] Found no defaults for '{device_type}'")
+            return
+
+        print(f"[{self.name}] Found device type: {device_type}")
+        print(f"[{self.name}] Applying default settings...")
+        for node_path, value in settings.items():
+            self.write_opcua(node_path, value)
