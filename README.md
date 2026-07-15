@@ -66,6 +66,8 @@ python main.py
 ```
 
 You'll be presented with a menu:
+
+```text
 =========================
 ESSENCE CLIENT
 =========================
@@ -74,24 +76,30 @@ ESSENCE CLIENT
 3. Wipe Cache
 4. Show Plots
 5. Toggle writing JSON
-6. Exit
-
+6. Apply default Settings
+0. Exit 
+=========================
+```
 
 - **Ping sensors** – checks connectivity to all configured sensors
 - **Single Measurement** – triggers a measurement on all sensors and saves the raw data locally
 - **Wipe Cache** – clears all locally stored measurement files
 - **Show Plots** – select and compare measurement files across sensors, with optional mean-centering
 - **Toggle writing JSON** – enables/disables raw data saving on a selected sensor
+- **Apply default Settings** – applies the default settings specified in `config/default_settings.json`
 
 > To take single measurements, you must first enable writing JSON on the sensors you want to measure
 
 ## Project Structure
+
+```
 app/
 ├── cache/              # Locally stored measurement data (per sensor)
 ├── config/             # Sensor configuration
-├── core/               # Cache management, plotting, config loading
+├── core/                # Cache management, plotting, config loading
 ├── models/             # Sensor class (REST + OPC UA communication)
 └── main.py             # CLI entry point
+```
 
 ## Credits
 
