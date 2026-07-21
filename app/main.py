@@ -1,3 +1,5 @@
+from numpy.distutils.fcompiler import none
+
 from core import cache
 from core.config import load_sensors
 from models.sensor import Sensor
@@ -69,76 +71,86 @@ def main():
     sensors = load_sensors()
 
     while True:
-        show_menu()
-        user_input = input("Choose an option: ")
+        try:
+            show_menu()
+            user_input = input("Choose an option: ")
 
-        if user_input == "1":
-            print("-------------------")
-            print("Pinging sensors...")
-            for sensor in sensors:
+            if user_input == "1":
                 print("-------------------")
-                print("Sensor: " + sensor.name)
-                sensor.ping()
-            print("-------------------")
-
-        elif user_input == "2":
-            print("-------------------")
-            user_input = input("Trigger all sensors? (y/n): ").lower()
-            if user_input == "n":
-                select_sensor(sensors)
-                sensor_choice = input("Enter choice: ")
-                sensor = sensors[int(sensor_choice) - 1]
-                sensor.single_measurement()
-                time.sleep(2)
-                link = sensor.get_link()
-                cache.save_raw(sensor.get_raw(link), sensor.name)
-            else:
-                print("Triggering all sensors...")
+                print("Pinging sensors...")
                 for sensor in sensors:
+                    print("-------------------")
+                    print("Sensor: " + sensor.name)
+                    sensor.ping()
+                print("-------------------")
+
+            elif user_input == "2":
+                print("-------------------")
+                user_input = input("Trigger all sensors? (y/n): ").lower()
+                if user_input == "n":
+                    select_sensor(sensors)
+                    sensor_choice = input("Enter choice: ")
+                    sensor = sensors[int(sensor_choice) - 1]
                     sensor.single_measurement()
-                time.sleep(5)
-
-                for sensor in sensors:
+                    time.sleep(2)
                     link = sensor.get_link()
                     cache.save_raw(sensor.get_raw(link), sensor.name)
-            print("-------------------")
+                elif user_input == "y":
+                    print("Triggering all sensors...")
+                    for sensor in sensors:
+                        sensor.single_measurement()
+                    time.sleep(5)
 
-        elif user_input == "3":
-            print("Wiping cache...")
-            cache.wipe_cache()
-            print("-------------------")
+                    for sensor in sensors:
+                        link = sensor.get_link()
+                        cache.save_raw(sensor.get_raw(link), sensor.name)
+                else:
+                    print("Invalid input. Please enter 'y' or 'n'.")
+                print("-------------------")
 
-        elif user_input == "4":
-            print("-------------------")
-            selected_files = {}
-            for sensor in sensors:
-                f = select_files(sensor.name)
-                if f:
-                    selected_files[sensor.name] = f
-            plot_compare_sensors(selected_files)
-            print("-------------------")
+            elif user_input == "3":
+                print("Wiping cache...")
+                cache.wipe_cache()
+                print("-------------------")
 
-        elif user_input == "5":
-            print("-------------------")
-            toggle_json_write(sensors)
-            print("-------------------")
-
-        elif user_input == "6":
-            print("-------------------")
-            user_input = input("Apply default settings for all sensors? (y/n): ").lower()
-            if user_input == "n":
-                select_sensor(sensors)
-                sensor_choice = input("Enter choice: ")
-                sensor = sensors[int(sensor_choice) - 1]
-                sensor.apply_default_settings()
-            else:
+            elif user_input == "4":
+                print("-------------------")
+                selected_files = {}
                 for sensor in sensors:
-                    sensor.apply_default_settings()
-            print("-------------------")
+                    f = select_files(sensor.name)
+                    if f:
+                        selected_files[sensor.name] = f
+                plot_compare_sensors(selected_files)
+                print("-------------------")
 
-        elif user_input == "0":
-            print("Exiting...")
-            break
+            elif user_input == "5":
+                print("-------------------")
+                toggle_json_write(sensors)
+                print("-------------------")
+
+            elif user_input == "6":
+                print("-------------------")
+                user_input = input("Apply default settings for all sensors? (y/n): ").lower()
+                if user_input == "n":
+                    select_sensor(sensors)
+                    sensor_choice = input("Enter choice: ")
+                    sensor = sensors[int(sensor_choice) - 1]
+                    sensor.apply_default_settings()
+                elif user_input == "y":
+                    for sensor in sensors:
+                        sensor.apply_default_settings()
+                else:
+                    print("Invalid input. Please enter 'y' or 'n'.")
+                print("-------------------")
+
+            elif user_input == "0":
+                print("Exiting...")
+                break
+            else:
+                print("Invalid input. Please choose a valid option.")
+                
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()

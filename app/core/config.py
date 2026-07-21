@@ -1,6 +1,6 @@
 import json
 import os
-from app.models.sensor import Sensor
+from models.sensor import Sensor
 
 def load_sensors(path: str = "config/sensors.json") -> list[Sensor]:
     if not os.path.exists(path):

@@ -85,6 +85,8 @@ class Sensor:
         else:
             raise ValueError(f"Unknown Hardware Type: {hw_type}")
 
+
+# TODO: Only sets values for this measurement
     def apply_default_settings(self, defaults_path: str = "config/defaults.json") -> None:
         with open(defaults_path, "r") as f:
             all_defaults = json.load(f)

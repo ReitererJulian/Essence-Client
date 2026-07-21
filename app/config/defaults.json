@@ -14,7 +14,7 @@
     "Acceleration.Configuration.Sensitivity": 16,
     "Acceleration.Configuration.Timespan": 2.0,
     "Acceleration.Control.ContinuousInterval": 10,
-    "Acceleration.Control.ContinuousMeasurement": false, 
+    "Acceleration.Control.ContinuousMeasurement": false,
     "Communication.Amqp.Enabled": true,
     "Visualization.Control.PlotResults": true
   }

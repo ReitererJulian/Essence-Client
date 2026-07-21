@@ -1,8 +1,8 @@
 [
   {
-    "name": "SENSOR_NAME",
-    "host": "SENSOR_IP",
-    "rest_port": "REST_PORT",
-    "opcua_port": "OPCUA_PORT"
+    "name": "ffffffff",
+    "host": "SES00000000ffffffff",
+    "rest_port": "8700",
+    "opcua_port": "4840"
   }
 ]
