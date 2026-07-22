@@ -1,5 +1,3 @@
-from numpy.distutils.fcompiler import none
-
 from core import cache
 from core.config import load_sensors
 from models.sensor import Sensor
@@ -148,7 +146,7 @@ def main():
                 break
             else:
                 print("Invalid input. Please choose a valid option.")
-                
+
         except Exception as e:
             print(f"An error occurred: {e}")
 
